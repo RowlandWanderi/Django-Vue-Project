@@ -24,7 +24,7 @@
               <router-link to="login" class="button is-light">Log in</router-link>
               <router-link to="cart" class="button is-success">
                 <span class="icon"><i class="fa fa-shopping-cart"></i></span>
-                <span>Cart</span>
+                <span>Cart ({{ cartTotalLength }})</span>
               </router-link>
             </div>
           </div>
@@ -51,7 +51,31 @@
 export default{
   data(){
     return{
-      showMobileMenu : false
+      showMobileMenu : false,
+      cart: {
+        items: []
+      }
+    }
+  },
+  //before anything else we need to initialize the store
+  //commit is used to call the mutations
+  beforeCreate(){
+    this.$store.commit('initializeStore')
+  },
+  //set the cart to be the cart  from the vuex store
+  mounted(){
+    this.cart = this.$store.state.cart
+  },
+  // computed are calculated variables based on things around on the whole page
+  computed: {
+    cartTotalLength(){
+      let totalLength = 0
+      //loop through all the items in the cart
+      for(let i = 0; i < this.cart.items.length; i++){
+        totalLength += this.cart.items[i].quantity
+      }
+      return totalLength
+
     }
   }
 }
